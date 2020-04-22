@@ -1,8 +1,10 @@
+#include "wled.h"
+
 /*
  * Receives client input
  */
 
-void _setRandomColor(bool _sec,bool fromButton=false)
+void _setRandomColor(bool _sec,bool fromButton)
 {
   lastRandomIndex = strip.get_random_wheel_index(lastRandomIndex);
   if (_sec){
@@ -140,10 +142,12 @@ void handleSettingsSet(AsyncWebServerRequest *request, byte subPage)
     receiveDirect = request->hasArg("RD");
     e131SkipOutOfSequence = request->hasArg("ES");
     e131Multicast = request->hasArg("EM");
+    t = request->arg("EP").toInt();
+    if (t > 0) e131Port = t;
     t = request->arg("EU").toInt();
-    if (t > 0  && t <= 63999) e131Universe = t;
+    if (t >= 0  && t <= 63999) e131Universe = t;
     t = request->arg("DA").toInt();
-    if (t > 0  && t <= 510) DMXAddress = t;
+    if (t >= 0  && t <= 510) DMXAddress = t;
     t = request->arg("DM").toInt();
     if (t >= DMX_MODE_DISABLED && t <= DMX_MODE_MULTIPLE_DRGB) DMXMode = t;
     t = request->arg("ET").toInt();
@@ -305,6 +309,10 @@ void handleSettingsSet(AsyncWebServerRequest *request, byte subPage)
     if (t>0 && t<513) {
       DMXGap = t;
     }
+    t = request->arg("SL").toInt();
+    if (t>=0 && t < MAX_LEDS) {
+      DMXStartLED = t;
+    }
     for (int i=0; i<15; i++) {
       String argname = "CH" + String((i+1));
       t = request->arg(argname).toInt();
@@ -330,7 +338,7 @@ int getNumVal(const String* req, uint16_t pos)
 
 
 //helper to get int value at a position in string
-bool updateVal(const String* req, const char* key, byte* val, byte minv=0, byte maxv=255)
+bool updateVal(const String* req, const char* key, byte* val, byte minv, byte maxv)
 {
   int pos = req->indexOf(key);
   if (pos < 1) return false;

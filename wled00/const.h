@@ -1,5 +1,9 @@
-#ifndef wled_const_h
-#define wled_const_h
+#ifndef WLED_CONST_H
+#define WLED_CONST_H
+
+/*
+ * Readability defines and their associated numerical values + compile-time constants
+ */
 
 //Defaults
 #define DEFAULT_CLIENT_SSID "Your_Network"
@@ -39,6 +43,7 @@
 #define REALTIME_MODE_HYPERION    3
 #define REALTIME_MODE_E131        4
 #define REALTIME_MODE_ADALIGHT    5
+#define REALTIME_MODE_ARTNET      6
 
 //E1.31 DMX modes
 #define DMX_MODE_DISABLED         0            //not used
@@ -71,5 +76,21 @@
 #define HUE_ERROR_JSON_PARSING  250
 #define HUE_ERROR_TIMEOUT       251
 #define HUE_ERROR_ACTIVE        255
+
+//EEPROM size
+#define EEPSIZE 2560  //Maximum is 4096
+
+#define NTP_PACKET_SIZE 48
+
+// maximum number of LEDs - MAX_LEDS is coming from the JSON response getting too big, MAX_LEDS_DMA will become a timing issue
+#define MAX_LEDS 1500
+#define MAX_LEDS_DMA 500
+
+// string temp buffer (now stored in stack locally)
+#define OMAX 2048
+
+#define E131_MAX_UNIVERSE_COUNT 9
+
+#define ABL_MILLIAMPS_DEFAULT 850; // auto lower brightness to stay close to milliampere limit
 
 #endif
